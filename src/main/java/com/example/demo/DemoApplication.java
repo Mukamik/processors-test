@@ -8,6 +8,7 @@ import org.springframework.boot.availability.AvailabilityChangeEvent;
 import org.springframework.boot.context.event.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -27,8 +28,9 @@ public class DemoApplication {
     }
 
     @GetMapping("/")
-    public String index() {
-        return availableProcessors.toString().replace(",", "<br>");
+    public String index(@RequestHeader(value = "User-Agent") String userAgent) {
+        String newline = userAgent.contains("curl") ? "\n" : "<br>";
+        return availableProcessors.toString().replace(",", newline);
     }
 
     //	The following events are in order that they occur
